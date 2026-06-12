@@ -1,0 +1,54 @@
+{
+  "name": "@fliq/sdk",
+  "version": "0.1.0",
+  "description": "Official TypeScript SDK for Fliq — reliable HTTP job scheduling (jobs, schedules, buffers, alerts, stats, billing).",
+  "keywords": [
+    "fliq",
+    "scheduler",
+    "cron",
+    "webhooks",
+    "jobs",
+    "rate-limit",
+    "queue",
+    "sdk"
+  ],
+  "license": "MIT",
+  "homepage": "https://fliq.sh",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fliq-sh/sdk-ts.git"
+  },
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}
