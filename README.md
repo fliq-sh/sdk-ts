@@ -5,9 +5,9 @@ scheduling. Schedule one-off or cron HTTP calls, queue rate-limited outbound
 traffic with **buffers**, and inspect every execution attempt — with auth,
 idempotency keys, pagination, and typed errors handled for you.
 
-Dependency-light, runs on Node 18+, Deno, Bun, Cloudflare Workers, and the
-browser (anywhere with a global `fetch`). Ships ESM + CJS + full type
-declarations.
+Dependency-light, runs on Node 20+, Deno, Bun, Cloudflare Workers, and the
+browser (anywhere with a global `fetch` and Web Crypto). Ships ESM + CJS + full
+type declarations.
 
 ## Install
 
