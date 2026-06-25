@@ -43,6 +43,33 @@ Pass `baseUrl` to point at a different environment (defaults to
 const fliq = new Fliq({ apiKey, baseUrl: "https://api.fliq.sh" });
 ```
 
+### Retries & timeouts
+
+The client retries transient failures automatically — connection errors and
+`408`/`429`/`5xx` responses — with exponential backoff and jitter, honoring a
+server `Retry-After` header when present. Each request also has a timeout; a
+request that produces no response in time is aborted (and retried if attempts
+remain). Defaults: `maxRetries: 2` (3 attempts total) and `timeout: 60000` ms.
+
+```ts
+// Client-wide defaults:
+const fliq = new Fliq({ apiKey, maxRetries: 4, timeout: 10_000 });
+
+// Per request (and a caller AbortSignal for cancellation) via the low-level
+// client — `request()` accepts maxRetries / timeout / signal overrides:
+await fliq.http.request("/jobs", {
+  method: "GET",
+  maxRetries: 0,
+  timeout: 2_000,
+  signal: controller.signal,
+});
+```
+
+Set `maxRetries: 0` to disable retries or `timeout: 0` to disable the timeout. A
+request you cancel via `signal` rejects immediately and is never retried. A
+timeout surfaces as `FliqTimeoutError`; an exhausted network failure as
+`FliqConnectionError` (with the original error on `.cause`).
+
 ### Iterate failed jobs (cursor pagination, transparent)
 
 `list()` returns one page; `iterate()` follows `next_cursor` for you as an async
@@ -82,6 +109,10 @@ Error classes: `FliqError` (base) and `BadRequestError` (400),
 `PermissionDeniedError` (403), `NotFoundError` (404), `ConflictError` (409),
 `RateLimitError` (429), `InternalServerError` (5xx). Each exposes `.status`,
 `.body`, and `.requestId` (from the `X-Request-ID` response header).
+
+Requests that never get an HTTP response throw `FliqConnectionError` (network
+failure, with the cause on `.cause`) or its subclass `FliqTimeoutError` (the
+request exceeded `timeout`). These carry no `.status`/`.body`.
 
 ## Buffers — outbound rate limiting
 

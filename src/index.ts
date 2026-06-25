@@ -16,6 +16,8 @@ export {
   ConflictError,
   RateLimitError,
   InternalServerError,
+  FliqConnectionError,
+  FliqTimeoutError,
   errorFromStatus,
 } from "./errors.js";
 export type { FliqErrorBody } from "./errors.js";

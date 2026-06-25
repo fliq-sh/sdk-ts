@@ -56,6 +56,29 @@ export class RateLimitError extends FliqError {}
 /** 5xx — the API failed unexpectedly. */
 export class InternalServerError extends FliqError {}
 
+/**
+ * The request never produced an HTTP response — a network failure, DNS error,
+ * dropped connection, or an aborted request. Unlike {@link FliqError} there is
+ * no status or body; the underlying cause (when there is one) is on `.cause`.
+ */
+export class FliqConnectionError extends Error {
+  constructor(message = "Fliq: connection error", options?: { cause?: unknown }) {
+    super(message);
+    this.name = new.target.name;
+    if (options && "cause" in options) {
+      (this as { cause?: unknown }).cause = options.cause;
+    }
+    Object.setPrototypeOf(this, new.target.prototype);
+  }
+}
+
+/** The request exceeded the configured `timeout` and was aborted. */
+export class FliqTimeoutError extends FliqConnectionError {
+  constructor(message = "Fliq: request timed out") {
+    super(message);
+  }
+}
+
 /** Map an HTTP status to the most specific FliqError subclass. */
 export function errorFromStatus(
   status: number,
