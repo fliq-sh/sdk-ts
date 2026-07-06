@@ -21,6 +21,8 @@ export {
 export type { FliqErrorBody } from "./errors.js";
 
 export { generateIdempotencyKey } from "./idempotency.js";
+export { verifyWebhook } from "./webhooks.js";
+export type { VerifyWebhookParams } from "./webhooks.js";
 export { paginate, withCursor } from "./pagination.js";
 export type { CursorPage } from "./pagination.js";
 
